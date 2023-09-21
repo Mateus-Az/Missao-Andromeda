@@ -1,0 +1,9 @@
+--CREATE SCHEMA IF NOT EXISTS todo_list;
+--CREATE TABLE lista_tarefas (
+--  id BIGINT NOT NULL,
+--   tarefas BIGINT,
+--   quantidade INTEGER,
+--   CONSTRAINT pk_lista_tarefas PRIMARY KEY (id)
+--);
+--
+--ALTER TABLE lista_tarefas ADD CONSTRAINT FK_LISTA_TAREFAS_ON_TAREFAS FOREIGN KEY (tarefas) REFERENCES tarefas (id);
