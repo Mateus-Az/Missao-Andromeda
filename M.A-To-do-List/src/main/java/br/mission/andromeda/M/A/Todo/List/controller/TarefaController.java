@@ -4,8 +4,10 @@ package br.mission.andromeda.M.A.Todo.List.controller;
 import br.mission.andromeda.M.A.Todo.List.dtos.TarefaDto;
 import br.mission.andromeda.M.A.Todo.List.models.TarefaModel;
 import br.mission.andromeda.M.A.Todo.List.repository.TarefaRepository;
+import br.mission.andromeda.M.A.Todo.List.service.TarefaService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,45 +22,42 @@ import java.util.Optional;
 public class TarefaController {
 
     @Autowired
-    TarefaRepository tarefaRepository;
+    TarefaService service;
 
     @PostMapping
-    public ResponseEntity<TarefaModel> saveTarefa(@RequestBody @Valid TarefaDto tarefaDto) {
-        var tarefaModel = new TarefaModel();
-        BeanUtils.copyProperties(tarefaDto, tarefaModel);
-        return ResponseEntity.status(HttpStatus.CREATED).body(tarefaRepository.save(tarefaModel));
+    public ResponseEntity<TarefaDto> criarTarefa(@RequestBody @Valid TarefaDto dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.criarTarefa(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<TarefaModel>> getAllTarefas() {
-        List<TarefaModel> tarefaList = tarefaRepository.findAll();
-        if(!tarefaList.isEmpty()) {
-                return (ResponseEntity<List<TarefaModel>>) tarefaList;
-            }
-        throw new RuntimeException("lista vazia");
+    public ResponseEntity<List<TarefaDto>> buscarTodasAsTarefas() {
+        return ResponseEntity.status(HttpStatus.OK).body(service.buscarTodasAsTarefas());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<TarefaDto> buscarTarefaPorId(@PathVariable @NotNull Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.buscarTarefaPorId(id));
+    }
+
+
     @PutMapping("/{id}")
-    @Transactional
-    public ResponseEntity<Object> updateTarefa(@PathVariable(value = "id") long id,
-                                               @RequestBody @Valid TarefaDto tarefaDto) {
-        Optional<TarefaModel> tarefa0 = tarefaRepository.findById(id);
-        if (tarefa0.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tarefa não encontrada.");
-        }
-        var tarefaModel = tarefa0.get();
-        BeanUtils.copyProperties(tarefaDto, tarefaModel);
-        return ResponseEntity.status(HttpStatus.OK).body(tarefaRepository.save(tarefaModel));
+    public ResponseEntity<TarefaDto> atualizarTarefaPorid(@PathVariable @NotNull Long id, @RequestBody TarefaDto dto){
+        return ResponseEntity.status(HttpStatus.OK).body(service.atualizarTarefaPodId(id, dto));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity concluirTarefaPorId(@PathVariable @NotNull Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(service.concluirTarefa(id));
     }
 
     @DeleteMapping
-    public ResponseEntity<Object> deleteTarefa(@PathVariable(value = "id") long id) {
-        Optional<TarefaModel> tarefa0 = tarefaRepository.findById(id);
-        if(tarefa0.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tarefa não encontrada.");
-        }
-        tarefaRepository.delete(tarefa0.get());
-        return ResponseEntity.status(HttpStatus.OK).body(tarefa0.get());
+    public ResponseEntity deletarTodasAsTarefas() {
+        return ResponseEntity.status(HttpStatus.OK).body(service.deletarTodasAsTarefas());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deletarTarefaPorId(@PathVariable @NotNull Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.deletarTarefaPorId(id));
     }
 }
 

@@ -1,10 +1,13 @@
 package br.mission.andromeda.M.A.Todo.List.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -21,7 +24,7 @@ public class TarefaModel {
     @Column(name = "id")
     private long id;
 
-    @NotNull
+
     @Size(min = 1, max = 200)
     @Column(name = "nome")
     private String nome;
@@ -34,8 +37,9 @@ public class TarefaModel {
     private int prioridade;
 
     @Column(name = "data")
-    private Date data;
+    private LocalDateTime data;
 
     @Column(name = "concluida")
     private boolean concluida;
+
 }
