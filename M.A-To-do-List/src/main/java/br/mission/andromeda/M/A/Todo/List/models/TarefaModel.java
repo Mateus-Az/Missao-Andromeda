@@ -22,24 +22,13 @@ public class TarefaModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long id;
-
-
+    private Long id;
     @Size(min = 1, max = 200)
-    @Column(name = "nome")
     private String nome;
-
     @Size(max = 300)
-    @Column(name = "sobre")
     private String sobre;
-
-    @Column(name = "prioridade")
-    private int prioridade;
-
-    @Column(name = "data")
+    private Integer prioridade;
     private LocalDateTime data;
-
-    @Column(name = "concluida")
-    private boolean concluida;
+    private Boolean concluida;
 
 }

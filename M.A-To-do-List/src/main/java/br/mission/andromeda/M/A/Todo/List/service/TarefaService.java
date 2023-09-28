@@ -62,36 +62,23 @@ public class TarefaService {
         return "Tarefa deletada com sucesso";
     }
 
-    public TarefaDto atualizarTarefaPodId(Long id, TarefaDto tarefaDtoAtualizada) {
+    public TarefaDto atualizarTarefaPodId(Long id, TarefaDto tarefaDto) {
         TarefaModel tarefaBanco = repository.findById(id).orElseThrow(() -> new TarefaNaoEncontradaException());
-        if (tarefaDtoAtualizada.getNome() != null){
-            tarefaBanco.setNome(tarefaDtoAtualizada.getNome());
-        }
-        if (tarefaDtoAtualizada.getSobre() != null){
-            tarefaBanco.setSobre(tarefaDtoAtualizada.getSobre());
-        }
-        if (tarefaDtoAtualizada.getPrioridade() >= 1 && tarefaDtoAtualizada.getPrioridade() <= 30){
-            tarefaBanco.setPrioridade(tarefaDtoAtualizada.getPrioridade());
-        }
-        if (tarefaDtoAtualizada.getData() != null){
-            tarefaBanco.setData(tarefaDtoAtualizada.getData());
 
-        }
-        if (tarefaDtoAtualizada.isConcluida() || tarefaDtoAtualizada.equals(false)){
-            tarefaBanco.setConcluida(tarefaDtoAtualizada.isConcluida());
-        }
+        tarefaDto.setId(id);
+        modelMapper.map(tarefaDto, tarefaBanco);
+
         return modelMapper.map(tarefaBanco, TarefaDto.class);
     }
 
 
     public String concluirTarefa(Long id) {
         TarefaModel tarefa = repository.findById(id).orElseThrow(() -> new TarefaNaoEncontradaException());
-        if (tarefa.isConcluida()) {
+        if (tarefa.getConcluida()) {
             throw new TarefaJaConcluidaException();
         }
         tarefa.setConcluida(true);
         repository.save(tarefa);
-
         return "Tarefa concluida com sucesso";
     }
 }

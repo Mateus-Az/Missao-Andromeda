@@ -35,21 +35,21 @@ public class TarefaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TarefaDto> buscarTarefaPorId(@PathVariable @NotNull Long id) {
+    public ResponseEntity<TarefaDto> buscarTarefaPorId(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.buscarTarefaPorId(id));
     }
 
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<?> atualizarTarefaPorid(@PathVariable @NotNull Long id, @RequestBody TarefaDto dto){
+    public ResponseEntity<TarefaDto> atualizarTarefaPorid(@PathVariable Long id, @RequestBody TarefaDto dto){
         return ResponseEntity.status(HttpStatus.OK).body(service.atualizarTarefaPodId(id, dto));
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity concluirTarefaPorId(@PathVariable @NotNull Long id){
-        return ResponseEntity.status(HttpStatus.OK).body(service.concluirTarefa(id));
-    }
+        @PatchMapping("/{id}")
+        public ResponseEntity concluirTarefaPorId(@PathVariable Long id){
+            return ResponseEntity.status(HttpStatus.OK).body(service.concluirTarefa(id));
+        }
 
     @DeleteMapping
     public ResponseEntity deletarTodasAsTarefas() {
@@ -57,7 +57,7 @@ public class TarefaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deletarTarefaPorId(@PathVariable @NotNull Long id) {
+    public ResponseEntity deletarTarefaPorId(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.deletarTarefaPorId(id));
     }
 }
