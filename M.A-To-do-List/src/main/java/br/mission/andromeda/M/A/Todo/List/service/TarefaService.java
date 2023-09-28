@@ -10,6 +10,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +26,7 @@ public class TarefaService {
     private ModelMapper modelMapper;
 
     public TarefaDto criarTarefa(TarefaDto dto) {
-        if (dto.getData() == null){
+        if (dto.getData() == null) {
             dto.setData(LocalDateTime.now());
         }
         return modelMapper.map(repository.save(modelMapper.map(dto, TarefaModel.class)), TarefaDto.class);
@@ -61,30 +63,30 @@ public class TarefaService {
     }
 
     public TarefaDto atualizarTarefaPodId(Long id, TarefaDto tarefaDtoAtualizada) {
-        TarefaModel tarefaModel = repository.findById(id).orElseThrow(() -> new TarefaNaoEncontradaException());
+        TarefaModel tarefaBanco = repository.findById(id).orElseThrow(() -> new TarefaNaoEncontradaException());
+        if (tarefaDtoAtualizada.getNome() != null){
+            tarefaBanco.setNome(tarefaDtoAtualizada.getNome());
+        }
+        if (tarefaDtoAtualizada.getSobre() != null){
+            tarefaBanco.setSobre(tarefaDtoAtualizada.getSobre());
+        }
+        if (tarefaDtoAtualizada.getPrioridade() >= 1 && tarefaDtoAtualizada.getPrioridade() <= 30){
+            tarefaBanco.setPrioridade(tarefaDtoAtualizada.getPrioridade());
+        }
+        if (tarefaDtoAtualizada.getData() != null){
+            tarefaBanco.setData(tarefaDtoAtualizada.getData());
 
-        if (tarefaDtoAtualizada.getNome() != null) {
-            tarefaModel.setNome(tarefaDtoAtualizada.getNome());
         }
-        if (tarefaDtoAtualizada.getSobre() != null) {
-            tarefaModel.setSobre(tarefaDtoAtualizada.getSobre());
+        if (tarefaDtoAtualizada.isConcluida() || tarefaDtoAtualizada.equals(false)){
+            tarefaBanco.setConcluida(tarefaDtoAtualizada.isConcluida());
         }
-        if (tarefaDtoAtualizada.getPrioridade() >= 1 && tarefaDtoAtualizada.getPrioridade() <= 3) {
-            tarefaModel.setPrioridade(tarefaDtoAtualizada.getPrioridade());
-        }
-        if (tarefaDtoAtualizada.getData() != null) {
-            tarefaModel.setData(tarefaDtoAtualizada.getData());
-        }
-        if (tarefaDtoAtualizada.isConcluida() || tarefaDtoAtualizada.equals(false)) {
-            tarefaModel.setConcluida(tarefaDtoAtualizada.isConcluida());
-        }
-
-        return modelMapper.map(repository.save(tarefaModel), TarefaDto.class);
+        return modelMapper.map(tarefaBanco, TarefaDto.class);
     }
+
 
     public String concluirTarefa(Long id) {
         TarefaModel tarefa = repository.findById(id).orElseThrow(() -> new TarefaNaoEncontradaException());
-        if (tarefa.isConcluida()){
+        if (tarefa.isConcluida()) {
             throw new TarefaJaConcluidaException();
         }
         tarefa.setConcluida(true);

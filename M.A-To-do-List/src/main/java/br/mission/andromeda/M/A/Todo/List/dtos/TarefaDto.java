@@ -1,5 +1,6 @@
 package br.mission.andromeda.M.A.Todo.List.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,7 @@ public class TarefaDto {
     @Size(min = 1, max = 300)
     private String sobre;
     private int prioridade;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime data;
 
     private boolean concluida;

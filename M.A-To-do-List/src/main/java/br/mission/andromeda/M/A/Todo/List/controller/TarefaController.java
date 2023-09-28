@@ -41,7 +41,8 @@ public class TarefaController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<TarefaDto> atualizarTarefaPorid(@PathVariable @NotNull Long id, @RequestBody TarefaDto dto){
+    @Transactional
+    public ResponseEntity<?> atualizarTarefaPorid(@PathVariable @NotNull Long id, @RequestBody TarefaDto dto){
         return ResponseEntity.status(HttpStatus.OK).body(service.atualizarTarefaPodId(id, dto));
     }
 
